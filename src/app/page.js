@@ -83,9 +83,8 @@ export default function Home() {
 
   return (
    <div className="relative h-screen flex justify-center items-center bg-indigo-200">
-       <h1>Hello World</h1>
        <video className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border-dashed border-8"  height={350} width={500} autoPlay ref={videoRef}/>
-       <canvas className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" height={350} width={500} ref={canvasRef}/>
+       <canvas className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" height={340} width={490} ref={canvasRef}/>
    </div>
   );
 }
