@@ -7,6 +7,7 @@ import '@tensorflow/tfjs';
 export default function Home() {
 
   const videoRef = useRef(null);
+  const canvasRef = useRef(null);
 
   const runDetection = () => {
     console.log("Mounted on Client Side");
@@ -32,10 +33,47 @@ export default function Home() {
 
       const modelPromise = cocoSsd.load();
 
-      Promise.all([webCamPromise,modelPromise]).then(values => console.log(values[0],values[1]))
+      Promise.all([webCamPromise,modelPromise]).then(values => {
+        detectFrame(videoRef.current,values[1]);
+      } ).catch(err => console.log(err) );
     }
 
     
+  }
+
+  const detectFrame = (video,model) => {
+    model.detect(video).then(predictions => {
+      renderPredictions(predictions);
+
+      requestAnimationFrame(() => {
+        detectFrame(video,model);
+      })
+    })
+  }
+
+  const renderPredictions = (predictions) => {
+    console.log("predictions",predictions)
+    const ctx = canvasRef.current.getContext("2d");
+    ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+
+    const font = "16px sans-serif";
+    ctx.font = font;
+    ctx.textBaseline = "top";
+
+    predictions.forEach(prediction => {
+      const [x,y,width,height] = prediction['bbox'];
+      ctx.strokeStyle = "#00FFFF";
+      ctx.lineWidth = 4;
+      ctx.strokeRect(x,y,width,height);
+
+      ctx.fillStyle = "#00FFFF";
+      const textWidth = ctx.measureText(prediction['class']).width;
+      const textHeight = parseInt(font,10);
+      ctx.fillRect(x,y,textWidth + 7,textHeight + 4);
+
+      ctx.fillStyle = "#000000";
+      ctx.fillText(prediction['class'],x,y);
+    });
   }
 
   useEffect(()=>{
@@ -44,9 +82,10 @@ export default function Home() {
 
 
   return (
-   <div className="">
+   <div className="relative h-screen flex justify-center items-center bg-indigo-200">
        <h1>Hello World</h1>
-       <video ref={videoRef}/>
+       <video className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border-dashed border-8"  height={350} width={500} autoPlay ref={videoRef}/>
+       <canvas className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" height={350} width={500} ref={canvasRef}/>
    </div>
   );
 }
