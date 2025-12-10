@@ -95,19 +95,25 @@ export default function Home() {
   
 
   // 1. Stop animation loop
-  cancelAnimationFrame(animationRef.current);
-
-  // 2. Stop camera stream
-  const stream = videoRef.current?.srcObject;
-  if (stream) {
-    stream.getTracks().forEach(track => track.stop());
+  if (animationRef.current) {
+    cancelAnimationFrame(animationRef.current);
   }
 
-  // 3. Remove feed from video
-  videoRef.current.srcObject = null;
+  // 2. Stop camera stream
+  if (videoRef.current) {
+    const stream = videoRef.current.srcObject;
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+    }
+    // 3. Remove feed from video
+    videoRef.current.srcObject = null;
+  }
 
-  const ctx = canvasRef.current.getContext("2d");
-  ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+  // 4. Clear canvas
+  if (canvasRef.current) {
+    const ctx = canvasRef.current.getContext("2d");
+    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+  }
 
   console.log("📌 Detection Stopped Successfully");
 };
