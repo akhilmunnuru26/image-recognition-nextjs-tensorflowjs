@@ -36,3 +36,12 @@ The UI is built for a dashboard-style experience with live bounding boxes, predi
 - Model performs inference on uploaded image element.
 - Predictions returned with className and probability.
 - UI lists identified objects with confidence percentage.
+
+## Running Locally
+- npm install
+- npm run dev
+- Open browser and navigate to http://localhost:3000
+
+
+
+
