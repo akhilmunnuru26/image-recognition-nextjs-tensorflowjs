@@ -122,6 +122,13 @@ export default function Home() {
   // ================= LOAD MODEL ON MOUNT ================= //
   useEffect(()=> { loadModel(); }, []);
 
+  // ================= CLEANUP ON UNMOUNT ================= //
+  useEffect(() => {
+    return () => {
+      stopDetection();
+    };
+  }, []);
+
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-black via-slate-900 to-indigo-900 text-white px-3">
